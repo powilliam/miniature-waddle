@@ -1,0 +1,10 @@
+{
+  "name": "@packages/firebase",
+  "version": "1.0.0",
+  "dependencies": {
+    "firebase": "^9.10.0"
+  },
+  "devDependencies": {
+    "@types/firebase": "^3.2.1"
+  }
+}
