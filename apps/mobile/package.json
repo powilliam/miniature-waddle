@@ -1,5 +1,5 @@
 {
-  "name": "@packages/app",
+  "name": "@apps/mobile",
   "version": "1.0.0",
   "main": "./main.js",
   "scripts": {
