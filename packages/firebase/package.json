@@ -1,6 +1,7 @@
 {
   "name": "@packages/firebase",
   "version": "1.0.0",
+  "main": "index.ts",
   "dependencies": {
     "firebase": "^9.10.0"
   },

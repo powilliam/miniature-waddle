@@ -1,13 +1,12 @@
 import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import { useFeatures } from "@packages/firebase/hooks";
-import type { Features } from "@packages/firebase/contexts";
-import { getFeatures } from "@packages/firebase/utils";
+import { features } from "@packages/firebase/server-side";
 
 import styles from "../styles/Home.module.css";
 
 export interface HomeServerSideProps {
-  features?: Features;
+  features?: ReturnType<typeof useFeatures>;
 }
 
 const Home: NextPage = () => {
@@ -30,8 +29,7 @@ export const getServerSideProps: GetServerSideProps<
   HomeServerSideProps
 > = async () => {
   try {
-    const features = await getFeatures<Features>();
-    return { props: { features } };
+    return { props: { features: await features() } };
   } catch (e) {
     return { props: {} };
   }

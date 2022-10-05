@@ -1,12 +1,34 @@
 import React from "react";
+import { FirebaseOptions } from "firebase/app";
 
-import { useSubscription } from "./hooks";
-import { FeaturesContext, Features } from "./contexts";
+import { useSubscription, useFirebaseSetup } from "./hooks";
+import { FeaturesContext, FirebaseContext } from "./contexts";
+import type { FeatureContextValues } from "./contexts";
 
-interface FeaturesProviderProps {
+interface ProviderProps {
   children?: React.ReactNode;
-  initialValue?: Features;
 }
+
+interface FirebaseProviderProps extends ProviderProps {
+  options?: FirebaseOptions;
+}
+
+interface FeaturesProviderProps extends ProviderProps {
+  initialValue?: FeatureContextValues;
+}
+
+export const FirebaseProvider = ({
+  options,
+  children,
+}: FirebaseProviderProps) => {
+  const { app, database } = useFirebaseSetup(options ?? {});
+
+  return (
+    <FirebaseContext.Provider value={{ app, database }}>
+      {children}
+    </FirebaseContext.Provider>
+  );
+};
 
 export const FeaturesProvider = ({
   children,
@@ -15,7 +37,7 @@ export const FeaturesProvider = ({
     isGreetingsEnabled: false,
   },
 }: FeaturesProviderProps) => {
-  const features = useSubscription<Features>({
+  const features = useSubscription<FeatureContextValues>({
     path: "features",
     initialValue,
   });
