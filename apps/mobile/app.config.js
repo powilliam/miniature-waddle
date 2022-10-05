@@ -8,5 +8,8 @@ module.exports = ({ config }) => ({
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
     FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+    eas: {
+      projectId: "42957601-2f6b-46f3-a197-fc845ce27436",
+    },
   },
 });
