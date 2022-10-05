@@ -1,7 +1,6 @@
 import React from "react";
-import { FirebaseOptions } from "firebase/app";
 
-import { useSubscription, useFirebaseSetup } from "./hooks";
+import { useSubscription, useFirebaseApplicationInterfaces } from "./hooks";
 import { FeaturesContext, FirebaseContext } from "./contexts";
 import type { FeatureContextValues } from "./contexts";
 
@@ -9,19 +8,14 @@ interface ProviderProps {
   children?: React.ReactNode;
 }
 
-interface FirebaseProviderProps extends ProviderProps {
-  options?: FirebaseOptions;
-}
+interface FirebaseProviderProps extends ProviderProps {}
 
 interface FeaturesProviderProps extends ProviderProps {
   initialValue?: FeatureContextValues;
 }
 
-export const FirebaseProvider = ({
-  options,
-  children,
-}: FirebaseProviderProps) => {
-  const { app, database } = useFirebaseSetup(options ?? {});
+export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
+  const { app, database } = useFirebaseApplicationInterfaces();
 
   return (
     <FirebaseContext.Provider value={{ app, database }}>

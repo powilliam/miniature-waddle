@@ -1,15 +1,15 @@
 module.exports = ({ config }) => ({
   ...config,
   extra: {
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
-    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
-    FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
-    FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
-    eas: {
-      projectId: "42957601-2f6b-46f3-a197-fc845ce27436",
+    ...config.extra,
+    firebaseOptions: {
+      apiKey: process.env.FIREBASE_API_KEY,
+      appId: process.env.FIREBASE_APP_ID,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     },
   },
 });

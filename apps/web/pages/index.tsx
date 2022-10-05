@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import { useFeatures } from "@packages/firebase/hooks";
-import { features } from "@packages/firebase/server-side";
+import { features } from "@packages/firebase/getters";
 
 import styles from "../styles/Home.module.css";
 

@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "eas build --platform android --profile production:apk --no-wait"
   },
   "dependencies": {
     "@packages/firebase": "1.0.0",

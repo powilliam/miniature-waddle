@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "start:apps": {
+      "dependsOn": ["@apps/web#start", "@apps/mobile#start"]
+    },
+    "dev:apps": {
+      "dependsOn": ["@apps/web#dev", "@apps/mobile#start"],
+      "cache": false
+    },
+    "build:apps": {
+      "dependsOn": ["@apps/web#build", "@apps/mobile#build"]
+    },
+    "@apps/web#dev": {},
+    "@apps/web#start": {},
+    "@apps/web#build": {
+      "outputs": [".next/**"]
+    },
+    "@apps/mobile#start": {},
+    "@apps/mobile#build": {
+      "outputs": []
+    }
+  }
+}

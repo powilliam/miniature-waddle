@@ -1,8 +1,16 @@
 {
   "name": "workspaces",
   "private": true,
+  "scripts": {
+    "build:apps": "turbo run build:apps",
+    "dev:apps": "turbo run dev:apps",
+    "start:apps": "turbo run start:apps"
+  },
   "workspaces": [
     "packages/*",
     "apps/*"
-  ]
+  ],
+  "devDependencies": {
+    "turbo": "^1.5.5"
+  }
 }

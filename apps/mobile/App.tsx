@@ -6,8 +6,6 @@ import {
 } from "@packages/firebase/providers";
 import { useFeatures } from "@packages/firebase/hooks";
 
-import { firebaseOptions } from "./configs";
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -30,7 +28,7 @@ function App() {
 }
 
 export default () => (
-  <FirebaseProvider options={firebaseOptions}>
+  <FirebaseProvider>
     <FeaturesProvider>
       <App />
     </FeaturesProvider>

@@ -4,8 +4,8 @@ import type { Database as FirebaseDatabase } from "firebase/database";
 import { createContext } from "react";
 
 export interface FirebaseContextValues {
-  app?: FirebaseApp;
-  database?: FirebaseDatabase;
+  app: FirebaseApp;
+  database: FirebaseDatabase;
 }
 
 export interface FeatureContextValues {
@@ -13,7 +13,9 @@ export interface FeatureContextValues {
   isGreetingsEnabled: boolean;
 }
 
-export const FirebaseContext = createContext<FirebaseContextValues>({});
+export const FirebaseContext = createContext<FirebaseContextValues>(
+  {} as FirebaseContextValues
+);
 
 export const FeaturesContext = createContext<FeatureContextValues>({
   isAutoAuthenticationEnabled: false,
