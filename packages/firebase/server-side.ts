@@ -5,6 +5,16 @@ import type { DatabaseReference, DataSnapshot } from "firebase/database";
 import Constants from "./constants";
 import type { FeatureContextValues } from "./contexts";
 
+const mapSnapshotToValue =
+  <T>() =>
+  (snapshot: DataSnapshot) =>
+    snapshot.val() as T;
+
+const mapReferenceToValue =
+  <T>() =>
+  (reference: DatabaseReference) =>
+    get(reference).then(mapSnapshotToValue<T>());
+
 const referenceFor = <T>(
   path: string,
   block: (reference: DatabaseReference) => T
@@ -16,13 +26,8 @@ const referenceFor = <T>(
   return block(reference);
 };
 
-const mapSnapshotToValue =
-  <T>() =>
-  (snapshot: DataSnapshot) =>
-    snapshot.val() as T;
-
 const valueFor = <T>(path: string) =>
-  referenceFor(path, (ref) => get(ref).then(mapSnapshotToValue<T>()));
+  referenceFor(path, mapReferenceToValue<T>());
 
 export const features = () =>
   valueFor<FeatureContextValues>(Constants.Features);
