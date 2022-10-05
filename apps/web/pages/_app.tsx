@@ -6,6 +6,7 @@ import {
   FirebaseProvider,
   FeaturesProvider,
 } from "@packages/firebase/providers";
+import { NetworkingProvider } from "@packages/networking/providers";
 
 import { HomeServerSideProps } from "./index";
 
@@ -19,13 +20,29 @@ initializeWithOptions({
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 });
 
+const networking = {
+  endpoints: {
+    "https://jsonplaceholder.typicode.com": ["users"],
+  },
+  interceptors: {
+    "*": {
+      headers: { "x-client-hello": "world" },
+    },
+    "https://jsonplaceholder.typicode.com": {
+      headers: { "x-client-endpoint": "users" },
+    },
+  },
+};
+
 function MyApp({ Component, pageProps }: AppProps<HomeServerSideProps>) {
   return (
-    <FirebaseProvider>
-      <FeaturesProvider initialValue={pageProps?.features}>
-        <Component {...pageProps} />
-      </FeaturesProvider>
-    </FirebaseProvider>
+    <NetworkingProvider {...networking} fallback={pageProps?.fallback}>
+      <FirebaseProvider>
+        <FeaturesProvider initialValue={pageProps?.features}>
+          <Component {...pageProps} />
+        </FeaturesProvider>
+      </FirebaseProvider>
+    </NetworkingProvider>
   );
 }
 

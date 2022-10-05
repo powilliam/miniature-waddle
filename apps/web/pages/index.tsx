@@ -2,15 +2,22 @@ import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
 import { useFeatures } from "@packages/firebase/hooks";
 import { features } from "@packages/firebase/getters";
+import { useNetworkingServiceCall } from "@packages/networking/hooks";
 
 import styles from "../styles/Home.module.css";
 
 export interface HomeServerSideProps {
   features?: ReturnType<typeof useFeatures>;
+  fallback?: Record<any, any>;
 }
 
 const Home: NextPage = () => {
   const features = useFeatures();
+
+  const { data: users, error } = useNetworkingServiceCall({
+    key: "first-users-page",
+    path: "users",
+  });
 
   return (
     <div className={styles.container}>
@@ -20,7 +27,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <p>{`${JSON.stringify(features)}`}</p>
+      <p>{`${JSON.stringify({ features, users, error })}`}</p>
     </div>
   );
 };
@@ -28,11 +35,38 @@ const Home: NextPage = () => {
 export const getServerSideProps: GetServerSideProps<
   HomeServerSideProps
 > = async () => {
-  try {
-    return { props: { features: await features() } };
-  } catch (e) {
-    return { props: {} };
-  }
+  return {
+    props: {
+      features: await features(),
+      fallback: {
+        "first-users-page": [
+          {
+            id: 1,
+            name: "Leanne Graham",
+            username: "Bret",
+            email: "Sincere@april.biz",
+            address: {
+              street: "Kulas Light",
+              suite: "Apt. 556",
+              city: "Gwenborough",
+              zipcode: "92998-3874",
+              geo: {
+                lat: "-37.3159",
+                lng: "81.1496",
+              },
+            },
+            phone: "1-770-736-8031 x56442",
+            website: "hildegard.org",
+            company: {
+              name: "Romaguera-Crona",
+              catchPhrase: "Multi-layered client-server neural-net",
+              bs: "harness real-time e-markets",
+            },
+          },
+        ],
+      },
+    },
+  };
 };
 
 export default Home;

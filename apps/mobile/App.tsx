@@ -5,6 +5,8 @@ import {
   FeaturesProvider,
 } from "@packages/firebase/providers";
 import { useFeatures } from "@packages/firebase/hooks";
+import { NetworkingProvider } from "@packages/networking/providers";
+import { useNetworkingServiceCall } from "@packages/networking/hooks";
 
 const styles = StyleSheet.create({
   container: {
@@ -19,18 +21,38 @@ const styles = StyleSheet.create({
 function App() {
   const features = useFeatures();
 
+  const { data: users } = useNetworkingServiceCall({
+    path: "users",
+  });
+
   return (
     <View style={styles.container}>
-      <Text>{`${JSON.stringify(features)}`}</Text>
+      <Text>{`${JSON.stringify({ features, users })}`}</Text>
       <StatusBar style="auto" />
     </View>
   );
 }
 
+const networking = {
+  endpoints: {
+    "https://jsonplaceholder.typicode.com": ["users"],
+  },
+  interceptors: {
+    "*": {
+      headers: { "x-client-hello": "world" },
+    },
+    "https://jsonplaceholder.typicode.com": {
+      headers: { "x-client-endpoint": "users" },
+    },
+  },
+};
+
 export default () => (
-  <FirebaseProvider>
-    <FeaturesProvider>
-      <App />
-    </FeaturesProvider>
-  </FirebaseProvider>
+  <NetworkingProvider {...networking}>
+    <FirebaseProvider>
+      <FeaturesProvider>
+        <App />
+      </FeaturesProvider>
+    </FirebaseProvider>
+  </NetworkingProvider>
 );
