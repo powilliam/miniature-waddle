@@ -1,9 +1,12 @@
-import "@packages/firebase";
-
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Text } from "react-native";
-import { FeaturesProvider } from "@packages/firebase/providers";
+import {
+  FirebaseProvider,
+  FeaturesProvider,
+} from "@packages/firebase/providers";
 import { useFeatures } from "@packages/firebase/hooks";
+
+import { firebaseOptions } from "./configs";
 
 const styles = StyleSheet.create({
   container: {
@@ -27,7 +30,9 @@ function App() {
 }
 
 export default () => (
-  <FeaturesProvider>
-    <App />
-  </FeaturesProvider>
+  <FirebaseProvider options={firebaseOptions}>
+    <FeaturesProvider>
+      <App />
+    </FeaturesProvider>
+  </FirebaseProvider>
 );
