@@ -42,9 +42,23 @@ export const useNetworkingClients = (
       baseURL,
     });
 
-    instance.interceptors.request.use((config) =>
-      Object.assign({}, config, interceptors?.[baseURL])
-    );
+    instance.interceptors.request.use((config) => {
+      if (!interceptors?.[baseURL]) {
+        return config;
+      }
+      const keys = Object.keys(interceptors?.[baseURL]);
+      return keys.reduce(
+        (innerConfig, key) => ({
+          ...innerConfig,
+          [key]: Object.assign(
+            {},
+            (config as Record<string, any>)[key],
+            interceptors?.[baseURL]?.[key]
+          ),
+        }),
+        config
+      );
+    });
 
     return {
       ...clients,
