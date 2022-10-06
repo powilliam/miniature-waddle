@@ -1,11 +1,9 @@
 import { createContext } from "react";
 
-import { useDefaultNetworkingFetcher } from "./hooks";
+import { useNetworkingFetcher } from "./hooks";
 
 interface NetworkingContextValues {
-  endpoints: Record<string, string[]>;
-  interceptors?: Record<symbol | string, any>;
-  fetcher: ReturnType<typeof useDefaultNetworkingFetcher>;
+  fetcher: ReturnType<typeof useNetworkingFetcher>;
 }
 
 export const NetworkingContext = createContext<NetworkingContextValues>(

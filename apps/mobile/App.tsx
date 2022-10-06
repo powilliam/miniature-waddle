@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, ScrollView, Text } from "react-native";
 import {
   FirebaseProvider,
   FeaturesProvider,
@@ -22,27 +22,36 @@ function App() {
   const features = useFeatures();
 
   const { data: users } = useNetworkingServiceCall({
-    path: "users",
+    url: "users",
+  });
+  const { data: products } = useNetworkingServiceCall({
+    url: "products",
+  });
+
+  // Shouldn't be called. Missing Configuration. Check console for warning
+  const { data: posts } = useNetworkingServiceCall({
+    url: "posts",
   });
 
   return (
-    <View style={styles.container}>
-      <Text>{`${JSON.stringify({ features, users })}`}</Text>
+    <ScrollView style={styles.container}>
+      <Text>{`${JSON.stringify({ features, users, products, posts })}`}</Text>
       <StatusBar style="auto" />
-    </View>
+    </ScrollView>
   );
 }
 
 const networking = {
   endpoints: {
     "https://jsonplaceholder.typicode.com": ["users"],
+    "https://dummyjson.com": ["products"],
   },
   interceptors: {
-    "*": {
-      headers: { "x-client-hello": "world" },
-    },
     "https://jsonplaceholder.typicode.com": {
       headers: { "x-client-endpoint": "users" },
+    },
+    "https://dummyjson.com": {
+      headers: { "x-client-endpoint": "products" },
     },
   },
 };

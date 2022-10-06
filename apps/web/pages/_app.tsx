@@ -23,13 +23,14 @@ initializeWithOptions({
 const networking = {
   endpoints: {
     "https://jsonplaceholder.typicode.com": ["users"],
+    "https://dummyjson.com": ["products"],
   },
   interceptors: {
-    "*": {
-      headers: { "x-client-hello": "world" },
-    },
     "https://jsonplaceholder.typicode.com": {
       headers: { "x-client-endpoint": "users" },
+    },
+    "https://dummyjson.com": {
+      headers: { "x-client-endpoint": "products" },
     },
   },
 };

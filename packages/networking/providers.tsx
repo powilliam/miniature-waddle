@@ -2,7 +2,7 @@ import React from "react";
 import { SWRConfig } from "swr";
 
 import { NetworkingContext } from "./contexts";
-import { useDefaultNetworkingFetcher } from "./hooks";
+import { useNetworkingClients, useNetworkingFetcher } from "./hooks";
 
 interface ProviderProps {
   endpoints: Record<string, string[]>;
@@ -17,10 +17,11 @@ export const NetworkingProvider = ({
   fallback = {},
   children,
 }: ProviderProps) => {
-  const fetcher = useDefaultNetworkingFetcher(endpoints, interceptors);
+  const clients = useNetworkingClients(endpoints, interceptors);
+  const fetcher = useNetworkingFetcher(clients);
 
   return (
-    <NetworkingContext.Provider value={{ endpoints, interceptors, fetcher }}>
+    <NetworkingContext.Provider value={{ fetcher }}>
       <SWRConfig value={{ fetcher, fallback }}>{children}</SWRConfig>
     </NetworkingContext.Provider>
   );

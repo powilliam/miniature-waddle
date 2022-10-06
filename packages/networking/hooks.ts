@@ -3,67 +3,74 @@ import useStaleWhileRevalidate from "swr";
 import type { SWRConfiguration, Key } from "swr";
 
 import axios from "axios";
-import type { AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig, AxiosInstance } from "axios";
 
 import { NetworkingContext } from "./contexts";
 
 interface NetworkingServiceCallConfig {
   key?: Key;
-  path: string;
+  url: string;
   config?: AxiosRequestConfig;
   staleWhileRevalidateConfig?: SWRConfiguration;
 }
 
 export const useNetworkingServiceCall = <T>({
   key,
-  path,
+  url,
   config = {},
   staleWhileRevalidateConfig,
 }: NetworkingServiceCallConfig) => {
   const { fetcher } = useNetworkingConfig();
 
   if (!key) {
-    return useStaleWhileRevalidate([path, config], staleWhileRevalidateConfig);
+    return useStaleWhileRevalidate([url, config], staleWhileRevalidateConfig);
   }
 
   return useStaleWhileRevalidate(
     key,
-    () => fetcher<T>([path, config]),
+    () => fetcher([url, config]),
     staleWhileRevalidateConfig
   );
 };
 
-export const useDefaultNetworkingFetcher = (
+export const useNetworkingClients = (
   endpoints: Record<string, string[]>,
   interceptors?: Record<symbol | string, any>
 ) => {
-  const domains = Object.keys(endpoints);
-  const paths = Object.values(endpoints);
+  return Object.entries(endpoints).reduce((clients, [baseURL, urls]) => {
+    const instance = axios.create({
+      baseURL,
+    });
 
-  return <T = {}>([url, config = {}]: [
-    string,
-    Partial<AxiosRequestConfig<any>>
-  ]) => {
-    const baseURL = paths.reduce((_, paths, position) => {
-      return !paths.includes(url) ? "NO_DOMAIN" : domains[position];
-    }, "NO_DOMAIN");
+    instance.interceptors.request.use((config) =>
+      Object.assign({}, config, interceptors?.[baseURL])
+    );
 
-    switch (baseURL) {
-      case "NO_DOMAIN":
-        return Promise.reject("Missing domain");
-      default:
-        const client = axios.create({
-          baseURL,
-        });
+    return {
+      ...clients,
+      [baseURL]: {
+        urls,
+        instance,
+      },
+    };
+  }, {});
+};
 
-        client.interceptors.request.use((config) => ({
-          ...config,
-          ...interceptors?.["*"],
-          ...interceptors?.[baseURL],
-        }));
+export const useNetworkingFetcher = (
+  clients: Record<string, { urls: string[]; instance: AxiosInstance }>
+) => {
+  return ([url, config = {}]: [string, Partial<AxiosRequestConfig<any>>]) => {
+    const client = Object.values(clients).find((client) =>
+      client.urls.includes(url)
+    );
 
-        return client<T>(url, config);
+    if (!client) {
+      return console.warn(
+        `Missing domain configuration for [${url}] at NetworkingProvider`
+      );
     }
+
+    return client?.instance(url, config);
   };
 };
 

@@ -14,9 +14,17 @@ export interface HomeServerSideProps {
 const Home: NextPage = () => {
   const features = useFeatures();
 
-  const { data: users, error } = useNetworkingServiceCall({
+  const { data: users } = useNetworkingServiceCall({
     key: "first-users-page",
-    path: "users",
+    url: "users",
+  });
+  const { data: products } = useNetworkingServiceCall({
+    url: "products",
+  });
+
+  // Shouldn't be called. Missing Configuration. Check console for warning
+  const { data: posts } = useNetworkingServiceCall({
+    url: "posts",
   });
 
   return (
@@ -27,7 +35,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <p>{`${JSON.stringify({ features, users, error })}`}</p>
+      <p>{`${JSON.stringify({ features, users, products, posts })}`}</p>
     </div>
   );
 };
